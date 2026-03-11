@@ -1,0 +1,69 @@
+{
+  "contact": {
+    "phones": [
+      "70661510",
+      "70661510"
+    ],
+    "emails": [
+      "info@hicare.sa",
+      ""
+    ],
+    "city": "الدوحة",
+    "workDays": "السبت – الخميس",
+    "workHours": "8 صباحًا – 10 مساءً"
+  },
+  "social": {
+    "whatsapp": {
+      "enabled": true,
+      "number": "0501234567"
+    },
+    "instagram": {
+      "enabled": true,
+      "url": "https://instagram.com/hicare"
+    },
+    "facebook": {
+      "enabled": true,
+      "url": "https://facebook.com/hicare"
+    },
+    "snapchat": {
+      "enabled": true,
+      "username": "hicare_sa"
+    },
+    "tiktok": {
+      "enabled": false,
+      "url": ""
+    },
+    "twitter": {
+      "enabled": false,
+      "url": ""
+    },
+    "youtube": {
+      "enabled": false,
+      "url": ""
+    },
+    "waButtonsInternational": "966501234567"
+  },
+  "branding": {
+    "name": "هاي كير",
+    "emoji": "✨",
+    "footerDescription": "نقدم خدمات منزلية ومناسباتية احترافية بجودة عالية وأسعار مناسبة.",
+    "slogan": "الجودة والاحترافية في كل خدمة"
+  },
+  "images": {
+    "hero": null,
+    "logo": "logo-1773238089668.jpg",
+    "services": {
+      "moving": "svc-moving-1773234191478.png",
+      "cleaning": "svc-cleaning-1773234098240.png",
+      "games": "svc-games-1773234155368.png"
+    },
+    "testimonials": {
+      "client1": null,
+      "client2": null,
+      "client3": null
+    }
+  },
+  "admin": {
+    "passwordHash": "65c7ee020a1db6dd64b5efc031a681b4fc1d3b48b583fdbbfe1cadc85f74de53"
+  }
+}

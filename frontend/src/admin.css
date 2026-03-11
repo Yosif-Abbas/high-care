@@ -1,0 +1,228 @@
+:root {
+  --admin-bg: #0f172a;
+  --admin-card: #1e293b;
+  --admin-border: rgba(255, 255, 255, 0.08);
+  --admin-primary: #0ea5e9;
+  --admin-primary-dark: #0284c7;
+  --admin-success: #10b981;
+  --admin-warning: #f59e0b;
+  --admin-danger: #ef4444;
+  --admin-text: #e2e8f0;
+  --admin-muted: #64748b;
+  --admin-input: #0f172a;
+  --admin-gradient: linear-gradient(135deg, #0ea5e9, #6366f1);
+}
+
+.admin-page {
+  min-height: 100vh;
+  background: var(--admin-bg);
+  color: var(--admin-text);
+  font-family: "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+
+.admin-navbar {
+  background: #1e293b;
+  border-bottom: 1px solid var(--admin-border);
+  padding: 0 2rem;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-nav-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+}
+
+.admin-nav-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.admin-nav-text h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: var(--admin-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.admin-nav-text span {
+  font-size: 0.72rem;
+  color: var(--admin-muted);
+}
+
+.admin-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.admin-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 9px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Tajawal", sans-serif;
+}
+
+.admin-btn-primary {
+  background: var(--admin-gradient);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35);
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.5);
+}
+
+.admin-main {
+  padding: 1.5rem 2rem 2.5rem;
+}
+
+.admin-message {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.2);
+  border: 1px solid rgba(45, 212, 191, 0.5);
+  font-size: 0.85rem;
+}
+
+.admin-grid-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.admin-card {
+  background: var(--admin-card);
+  border-radius: 16px;
+  border: 1px solid var(--admin-border);
+  padding: 1.2rem 1.4rem 1.4rem;
+}
+
+.admin-card h2 {
+  font-size: 1rem;
+  font-weight: 900;
+  margin-bottom: 0.9rem;
+}
+
+.admin-fields {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-field-label {
+  font-size: 0.8rem;
+  color: var(--admin-muted);
+  margin-bottom: 0.25rem;
+}
+
+.admin-input {
+  width: 100%;
+  background: #020617;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 0.4rem 0.6rem;
+  color: var(--admin-text);
+  font-size: 0.85rem;
+  font-family: "Tajawal", sans-serif;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.4);
+}
+
+.admin-section-title {
+  font-size: 1rem;
+  font-weight: 900;
+  margin: 1.8rem 0 0.8rem;
+}
+
+.admin-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.admin-img-slot {
+  border-radius: 14px;
+  border: 1px dashed rgba(148, 163, 184, 0.6);
+  padding: 0.7rem;
+  background: #020617;
+}
+
+.admin-img-slot-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 0.4rem;
+}
+
+.admin-img-preview {
+  width: 100%;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 0.4rem;
+}
+
+.admin-img-empty {
+  height: 120px;
+  border-radius: 10px;
+  border: 1px dashed rgba(55, 65, 81, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-bottom: 0.4rem;
+}
+
+.admin-img-input {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .admin-navbar {
+    padding: 0 1rem;
+  }
+  .admin-main {
+    padding: 1rem;
+  }
+  .admin-grid-two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+

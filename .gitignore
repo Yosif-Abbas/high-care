@@ -1,0 +1,12 @@
+# root ignore
+
+# ignore node modules in any subdirectory
+**/node_modules
+
+dist
+
+# environment files
+.env
+
+# backend folder is legacy if you're using monorepo API
+.vercel
