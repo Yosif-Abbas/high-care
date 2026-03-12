@@ -1,12 +1,24 @@
-# root ignore
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# ignore node modules in any subdirectory
-**/node_modules
-
+node_modules
 dist
+dist-ssr
+*.local
 
-# environment files
-.env
-
-# backend folder is legacy if you're using monorepo API
-.vercel
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

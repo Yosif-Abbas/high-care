@@ -15,10 +15,12 @@ const app = express();
 const ROOT_DIR = path.join(
   path.dirname(new URL(import.meta.url).pathname),
   "..",
+
   "..",
 );
 const CONTENT_PATH = path.join(ROOT_DIR, "content", "content.json");
-const IMAGES_DIR = path.join(ROOT_DIR, "images");
+// static asset directory for user-uploaded images – now stored under public
+const IMAGES_DIR = path.join(ROOT_DIR, "public");
 
 // port configuration is only used when running the file directly
 // (Vercel provides its own runtime and ignores this value)
@@ -48,6 +50,7 @@ ensureContentFile();
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
 app.use("/images", express.static(IMAGES_DIR));
+// keep favicon route as earlier
 app.get("/favicon.ico", (req, res) => {
   const icoPath = path.join(IMAGES_DIR, "favicon.ico");
   if (fs.existsSync(icoPath)) {
