@@ -49,7 +49,11 @@ export default function Admin() {
       body: JSON.stringify(content),
     })
       .then((r) => r.json())
-      .then(() => setMessage("تم الحفظ في content.json"))
+      .then(() =>
+        setMessage(
+          "تم الحفظ (وتمت محاولة إرسال التغييرات إلى GitHub عند توفرها)",
+        ),
+      )
       .catch(() => setMessage("فشل الحفظ"))
       .finally(() => setSaving(false));
   };
@@ -96,26 +100,7 @@ export default function Admin() {
       .catch(() => setPwdMsg("تعذر الاتصال بالسيرفر"));
   };
 
-  const uploadImage = (field, file) => {
-    if (!file) return;
-    const fd = new FormData();
-    fd.append("field", field);
-    fd.append("image", file);
-    setMessage("");
-    fetch(`${API_BASE}/api/upload-image`, {
-      method: "POST",
-      body: fd,
-    })
-      .then((r) => r.json())
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        setMessage("تم رفع الصورة وحذف القديمة (إن وجدت)");
-        // refresh content
-        return fetch(`${API_BASE}/api/content`).then((r2) => r2.json());
-      })
-      .then(setContent)
-      .catch(() => setMessage("فشل رفع الصورة"));
-  };
+  // image uploads are no longer supported; images are managed statically via GitHub CMS
 
   if (!authorized) {
     return (
@@ -278,31 +263,43 @@ export default function Admin() {
         </section>
 
         <section>
-          <h2 className="admin-section-title">
-            🖼️ صور أساسية (رفع صورة جديدة يحذف القديمة تلقائيًا)
-          </h2>
-          <div className="admin-images-grid">
-            <ImageSlot
-              label="نقل الأثاث"
-              filename={content.images.services.moving}
-              onFile={(f) => uploadImage("svc-moving", f)}
-            />
-            <ImageSlot
-              label="تنظيف الفلل"
-              filename={content.images.services.cleaning}
-              onFile={(f) => uploadImage("svc-cleaning", f)}
-            />
-            <ImageSlot
-              label="تأجير الألعاب"
-              filename={content.images.services.games}
-              onFile={(f) => uploadImage("svc-games", f)}
-            />
-            <ImageSlot
-              label="شعار الموقع (سيُستخدم أيضًا كأيقونة المتصفح)"
-              filename={content.images.logo}
-              onFile={(f) => uploadImage("logo", f)}
-            />
-          </div>
+          <h2 className="admin-section-title">🖼️ صور أساسية</h2>
+          <p>
+            تتم إدارة الصور بشكلٍ ثابت عبر GitHub CMS. لتحديث أي صورة، قم بتحرير
+            محتوى المستودع مباشرةً وإعادة النشر.
+          </p>
+          {content.images && (
+            <div className="admin-images-grid">
+              {content.images.services.moving && (
+                <img
+                  src={`${API_BASE}/images/${content.images.services.moving}`}
+                  alt="نقل الأثاث"
+                  className="admin-img-preview"
+                />
+              )}
+              {content.images.services.cleaning && (
+                <img
+                  src={`${API_BASE}/images/${content.images.services.cleaning}`}
+                  alt="تنظيف الفلل"
+                  className="admin-img-preview"
+                />
+              )}
+              {content.images.services.games && (
+                <img
+                  src={`${API_BASE}/images/${content.images.services.games}`}
+                  alt="تأجير الألعاب"
+                  className="admin-img-preview"
+                />
+              )}
+              {content.images.logo && (
+                <img
+                  src={`${API_BASE}/images/${content.images.logo}`}
+                  alt="شعار"
+                  className="admin-img-preview"
+                />
+              )}
+            </div>
+          )}
         </section>
 
         <section>
@@ -358,22 +355,4 @@ function Field({ label, value, onChange }) {
   );
 }
 
-function ImageSlot({ label, filename, onFile }) {
-  const url = filename ? `${API_BASE}/images/${filename}` : null;
-  return (
-    <div className="admin-img-slot">
-      <div className="admin-img-slot-label">{label}</div>
-      {url ? (
-        <img src={url} alt={label} className="admin-img-preview" />
-      ) : (
-        <div className="admin-img-empty">لا توجد صورة بعد</div>
-      )}
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => onFile(e.target.files?.[0] || null)}
-        className="admin-img-input"
-      />
-    </div>
-  );
-}
+// ImageSlot component removed; previews inline in the image section

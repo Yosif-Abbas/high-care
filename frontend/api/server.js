@@ -4,10 +4,10 @@ import express from "express";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
-import multer from "multer";
 import crypto from "crypto";
-import sharp from "sharp";
-import pngToIco from "png-to-ico";
+import { Buffer } from "buffer";
+
+import "dotenv/config";
 
 const app = express();
 
@@ -29,120 +29,21 @@ function hashPassword(pw) {
 }
 
 function ensureContentFile() {
-  if (!fs.existsSync(path.dirname(CONTENT_PATH))) {
-    fs.mkdirSync(path.dirname(CONTENT_PATH), { recursive: true });
+  // local file maintenance is discouraged; the CMS (GitHub) should own the
+  // file. if no token is configured we simply log a warning but do not try to
+  // create or mutate the file automatically.
+  if (!process.env.GITHUB_TOKEN) {
+    console.warn(
+      "GITHUB_TOKEN not set – content.json must exist and be edited manually.",
+    );
+    return;
   }
-  if (
-    !fs.existsSync(CONTENT_PATH) ||
-    fs.readFileSync(CONTENT_PATH, "utf8").trim() === ""
-  ) {
-    const initial = {
-      contact: {
-        phones: ["0501234567", "0501234567"],
-        emails: ["info@hicare.sa", ""],
-        city: "الرياض",
-        workDays: "السبت – الخميس",
-        workHours: "8 صباحًا – 10 مساءً",
-      },
-      social: {
-        whatsapp: { enabled: true, number: "0501234567" },
-        instagram: { enabled: true, url: "https://instagram.com/hicare" },
-        facebook: { enabled: true, url: "https://facebook.com/hicare" },
-        snapchat: { enabled: true, username: "hicare_sa" },
-        tiktok: { enabled: false, url: "" },
-        twitter: { enabled: false, url: "" },
-        youtube: { enabled: false, url: "" },
-        waButtonsInternational: "966501234567",
-      },
-      branding: {
-        name: "هاي كير",
-        emoji: "✨",
-        footerDescription:
-          "نقدم خدمات منزلية ومناسباتية احترافية بجودة عالية وأسعار مناسبة.",
-        slogan: "الجودة والاحترافية في كل خدمة",
-      },
-      images: {
-        hero: null,
-        logo: "logo.png",
-        services: {
-          moving: null,
-          cleaning: null,
-          games: null,
-        },
-        testimonials: {
-          client1: null,
-          client2: null,
-          client3: null,
-        },
-      },
-      admin: {
-        // default password: change-me-1234
-        passwordHash: hashPassword("change-me-1234"),
-      },
-    };
-    fs.writeFileSync(CONTENT_PATH, JSON.stringify(initial, null, 2), "utf8");
-  } else {
-    try {
-      const existing = JSON.parse(
-        fs.readFileSync(CONTENT_PATH, "utf8") || "{}",
-      );
-      let changed = false;
-      if (!existing.admin || !existing.admin.passwordHash) {
-        existing.admin = {
-          passwordHash: hashPassword("change-me-1234"),
-        };
-        changed = true;
-      }
-      if (!existing.images) {
-        existing.images = {};
-        changed = true;
-      }
-      if (!existing.images.logo) {
-        existing.images.logo = "logo.png";
-        changed = true;
-      }
-      if (changed) {
-        fs.writeFileSync(
-          CONTENT_PATH,
-          JSON.stringify(existing, null, 2),
-          "utf8",
-        );
-      }
-    } catch {
-      // ignore errors
-    }
-  }
+  // when a token exists we assume GitHub has the correct file; nothing to do
 }
 
 ensureContentFile();
 
-async function ensureFavicon() {
-  const icoPath = path.join(IMAGES_DIR, "favicon.ico");
-  if (fs.existsSync(icoPath)) return;
-  try {
-    const data = readContent();
-    const logoFile = data.images?.logo;
-    if (logoFile) {
-      const logoPath = path.join(IMAGES_DIR, logoFile);
-      if (fs.existsSync(logoPath)) {
-        try {
-          const pngBuf = await sharp(logoPath)
-            .resize(256, 256, { fit: "cover" })
-            .png()
-            .toBuffer();
-          const icoBuf = await pngToIco(pngBuf);
-          fs.writeFileSync(icoPath, icoBuf);
-        } catch (e) {
-          console.warn("startup favicon conversion failed", e.message);
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("could not ensure favicon on boot", err.message);
-  }
-}
-
-ensureFavicon();
+// favicon generation disabled; images are managed statically via GitHub CMS
 
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
@@ -156,39 +57,94 @@ app.get("/favicon.ico", (req, res) => {
   }
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, IMAGES_DIR);
-  },
-  filename: (req, file, cb) => {
-    const safeField = (req.body.field || "image").replace(
-      /[^a-zA-Z0-9-_]/g,
-      "",
-    );
-    const ext = path.extname(file.originalname) || ".png";
-    const ts = Date.now();
-    cb(null, `${safeField}-${ts}${ext}`);
-  },
-});
+// image upload handling removed; static images only
 
-const upload = multer({
-  storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
-});
-
-function readContent() {
-  const raw = fs.readFileSync(CONTENT_PATH, "utf8");
-  return JSON.parse(raw || "{}");
+// fetch content.json either locally (dev) or from GitHub (prod)
+async function readContent() {
+  if (!process.env.GITHUB_TOKEN) {
+    throw new Error("GITHUB_TOKEN required to read content.json");
+  }
+  const repo = process.env.GITHUB_REPOSITORY;
+  const branch = process.env.GITHUB_BRANCH || "main";
+  const url = `https://raw.githubusercontent.com/${repo}/${branch}/content/content.json`;
+  const resp = await fetch(url);
+  if (!resp.ok) {
+    throw new Error(`failed to fetch content from GitHub: ${resp.status}`);
+  }
+  const text = await resp.text();
+  return JSON.parse(text || "{}");
 }
 
-function writeContent(data) {
-  fs.writeFileSync(CONTENT_PATH, JSON.stringify(data, null, 2), "utf8");
+// write using GitHub API when possible, otherwise fall back to filesystem
+async function writeContent(data) {
+  // always push to GitHub; without a token the CMS cannot be updated.
+  if (!process.env.GITHUB_TOKEN) {
+    throw new Error("GITHUB_TOKEN required to modify content.json");
+  }
+  await commitContent(data);
+}
+
+// commit a JSON blob to the repository via GitHub REST API
+async function commitContent(data) {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error("GITHUB_TOKEN not set");
+  const repo = process.env.GITHUB_REPOSITORY;
+  if (!repo) throw new Error("GITHUB_REPOSITORY env not set");
+  const branch = process.env.GITHUB_BRANCH || "main";
+  const pathInRepo = "content/content.json";
+  const apiBase = `https://api.github.com/repos/${repo}/contents/${pathInRepo}`;
+
+  let sha;
+  try {
+    const resp = await fetch(`${apiBase}?ref=${branch}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+      },
+    });
+    if (resp.ok) {
+      const info = await resp.json();
+      sha = info.sha;
+    } else if (resp.status !== 404) {
+      const errText = await resp.text();
+      throw new Error(
+        `GitHub API error getting sha: ${resp.status} ${errText}`,
+      );
+    }
+  } catch (e) {
+    console.error("failed to fetch existing file info", e.message);
+  }
+
+  const contentBase64 = Buffer.from(JSON.stringify(data, null, 2)).toString(
+    "base64",
+  );
+  const body = {
+    message: "Update content.json via admin panel",
+    content: contentBase64,
+    branch,
+  };
+  if (sha) body.sha = sha;
+
+  const putRes = await fetch(apiBase, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!putRes.ok) {
+    const errText = await putRes.text();
+    throw new Error(`GitHub commit failed: ${putRes.status} ${errText}`);
+  }
+  return await putRes.json();
 }
 
 // get public content
-app.get("/api/content", (req, res) => {
+app.get("/api/content", async (req, res) => {
   try {
-    const data = readContent();
+    const data = await readContent();
     // strip admin before sending the response
     const { admin: _admin, ...publicData } = data;
     res.json(publicData);
@@ -198,109 +154,30 @@ app.get("/api/content", (req, res) => {
   }
 });
 
-app.post("/api/content", (req, res) => {
+app.post("/api/content", async (req, res) => {
   try {
-    const existing = readContent();
+    const existing = await readContent();
     const { admin } = existing;
     const updated = { ...existing, ...req.body, admin };
-    writeContent(updated);
+    await writeContent(updated);
     res.json({ ok: true, data: updated });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: "Failed to save content" });
+    res.status(500).json({ error: e.message || "Failed to save content" });
   }
 });
 
-function removeOldImage(oldFilename) {
-  if (!oldFilename) return;
-  const p = path.join(IMAGES_DIR, oldFilename);
-  if (fs.existsSync(p)) {
-    try {
-      fs.unlinkSync(p);
-    } catch (e) {
-      console.warn("Failed to delete old image:", p, e.message);
-    }
-  }
-}
+// removeOldImage helper no longer needed since uploads are disabled
 
-app.post("/api/upload-image", upload.single("image"), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
-    const field = req.body.field;
-    if (!field) {
-      return res.status(400).json({ error: "Missing field parameter" });
-    }
+// upload-image endpoint removed; static images are managed by GitHub CMS
 
-    const data = readContent();
-    let filename = req.file.filename;
-
-    if (field === "logo") {
-      try {
-        const origPath = path.join(IMAGES_DIR, filename);
-        const pngBuf = await sharp(origPath)
-          .resize(256, 256, { fit: "cover" })
-          .png()
-          .toBuffer();
-        const icoBuf = await pngToIco(pngBuf);
-        const icoPath = path.join(IMAGES_DIR, "favicon.ico");
-        fs.writeFileSync(icoPath, icoBuf);
-      } catch (e) {
-        console.warn("Failed to convert logo to favicon.ico", e.message);
-      }
-    }
-
-    let oldFilename = null;
-    if (field === "hero") {
-      oldFilename = data.images.hero;
-      data.images.hero = filename;
-    } else if (field === "logo") {
-      oldFilename = data.images.logo;
-      data.images.logo = filename;
-    } else if (field === "svc-moving") {
-      oldFilename = data.images.services.moving;
-      data.images.services.moving = filename;
-    } else if (field === "svc-cleaning") {
-      oldFilename = data.images.services.cleaning;
-      data.images.services.cleaning = filename;
-    } else if (field === "svc-games") {
-      oldFilename = data.images.services.games;
-      data.images.services.games = filename;
-    } else if (field === "client1") {
-      oldFilename = data.images.testimonials.client1;
-      data.images.testimonials.client1 = filename;
-    } else if (field === "client2") {
-      oldFilename = data.images.testimonials.client2;
-      data.images.testimonials.client2 = filename;
-    } else if (field === "client3") {
-      oldFilename = data.images.testimonials.client3;
-      data.images.testimonials.client3 = filename;
-    } else {
-      return res.status(400).json({ error: "Unknown field value" });
-    }
-
-    removeOldImage(oldFilename);
-    writeContent(data);
-
-    res.json({
-      ok: true,
-      filename,
-      url: `/images/${filename}`,
-    });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Failed to upload image" });
-  }
-});
-
-app.post("/api/admin/login", (req, res) => {
+app.post("/api/admin/login", async (req, res) => {
   try {
     const { password } = req.body || {};
     if (!password) {
       return res.status(400).json({ ok: false, error: "Missing password" });
     }
-    const data = readContent();
+    const data = await readContent();
     const expected = data.admin?.passwordHash;
     if (!expected) {
       return res.status(500).json({ ok: false, error: "Admin not configured" });
@@ -314,11 +191,11 @@ app.post("/api/admin/login", (req, res) => {
     return res.json({ ok: true });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ ok: false, error: "Login failed" });
+    res.status(500).json({ ok: false, error: e.message || "Login failed" });
   }
 });
 
-app.post("/api/admin/change-password", (req, res) => {
+app.post("/api/admin/change-password", async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body || {};
     if (!currentPassword || !newPassword) {
@@ -327,7 +204,7 @@ app.post("/api/admin/change-password", (req, res) => {
         error: "الرجاء إدخال كلمة المرور الحالية والجديدة",
       });
     }
-    const data = readContent();
+    const data = await readContent();
     const expected = data.admin?.passwordHash;
     if (!expected) {
       return res.status(500).json({ ok: false, error: "Admin not configured" });
@@ -338,11 +215,13 @@ app.post("/api/admin/change-password", (req, res) => {
         .json({ ok: false, error: "كلمة المرور الحالية غير صحيحة" });
     }
     data.admin.passwordHash = hashPassword(newPassword);
-    writeContent(data);
+    await writeContent(data);
     return res.json({ ok: true });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ ok: false, error: "Change password failed" });
+    res
+      .status(500)
+      .json({ ok: false, error: e.message || "Change password failed" });
   }
 });
 

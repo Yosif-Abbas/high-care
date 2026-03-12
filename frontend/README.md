@@ -38,6 +38,15 @@ API exposed via serverless functions on Vercel. The backend code lives under
 - `VITE_API_BASE` is used by the React code and defaults to `""` in
   production (requests are made relative to the same origin). The example
   file is provided in `frontend/.env.example`.
+- `GITHUB_TOKEN` – a personal access token with `repo` scope. **This is
+  required in every environment** (development as well as production). The
+  backend no longer reads or writes the disk; it always talks to GitHub.
+  For local testing you can create a temporary token and set
+  `GITHUB_REPOSITORY`/`GITHUB_BRANCH` accordingly. If you don’t want to use
+  the API you must still supply a token (its value will be ignored) to
+  prevent the server from erroring.
+- `GITHUB_REPOSITORY` – the owner/repo slug (e.g. `Yosif-Abbas/high-care`).
+- `GITHUB_BRANCH` – branch to commit to; defaults to `main`.
 
 ### Production on Vercel
 
@@ -50,6 +59,8 @@ API exposed via serverless functions on Vercel. The backend code lives under
 
 > ⚠️ **Important:** Vercel serverless functions have an _ephemeral_
 > filesystem. Any writes to `content.json` or the `images/` folder will **not be
-> preserved** between invocations. For persistence you must switch to a
-> dedicated server or external storage (S3, database, etc.), or continue
-> hosting the backend separately.
+> preserved** between invocations. The application now treats the repository
+> as the CMS; it reads and writes `content.json` exclusively via GitHub's API.
+> Therefore **a valid `GITHUB_TOKEN` is mandatory in all environments**. If the
+> token is missing the server will throw on every request that accesses
+> content. This ensures you don’t accidentally rely on broken local I/O.
