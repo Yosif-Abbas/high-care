@@ -167,6 +167,8 @@ export default function Admin() {
     return <PageLoading />;
   }
 
+  console.log(content);
+
   return (
     <div className="admin-page">
       <nav className="">
