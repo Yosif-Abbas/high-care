@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PageLoading from "./components/PageLoading";
 
 // use an explicit environment variable when the backend runs on a separate
 // port. When deployed on Vercel the API lives on the same origin, so the
@@ -39,11 +40,7 @@ export default function Home() {
   }, []);
 
   if (loading) {
-    return (
-      <div style={{ padding: "2rem", textAlign: "center", direction: "rtl" }}>
-        جاري تحميل الموقع...
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (error || !content) {
@@ -75,9 +72,10 @@ export default function Home() {
       <nav id="navbar">
         <div className="logo-wrap">
           <div className="logo-icon">
-            {logoUrl ? <img src={logoUrl} alt={brandName} /> : logoEmoji}
+            {/* {logoUrl ? <img src={logoUrl} alt={brandName} /> : logoEmoji} */}
+            <img src="/logo.png" alt={brandName} />
           </div>
-          <span className="logo-text">{brandName}</span>
+          {/* <span className="logo-text">{brandName}</span> */}
         </div>
         <ul className={`nav-links ${navOpen ? "open" : ""}`} id="navLinks">
           <li>

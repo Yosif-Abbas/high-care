@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./admin.css";
+import PageLoading from "./components/PageLoading";
 
 // use an explicit environment variable when the backend runs on a separate
 // port. When deployed on Vercel the API lives on the same origin, so the
@@ -163,30 +164,26 @@ export default function Admin() {
   }
 
   if (!content) {
-    return (
-      <div style={{ padding: "2rem", textAlign: "center", direction: "rtl" }}>
-        جاري تحميل لوحة التحكم...
-      </div>
-    );
+    return <PageLoading />;
   }
 
   return (
     <div className="admin-page">
-      <header className="admin-navbar">
+      <nav className="">
         <div className="admin-nav-brand">
-          <div className="admin-nav-logo">
-            {content.images?.logo ? (
+          <div className="logo-icon">
+            {/* {content.images?.logo ? (
               <img
                 src={`${API_BASE}/images/${content.images.logo}`}
                 alt={content.branding.name}
               />
             ) : (
               content.branding.emoji
-            )}
+            )} */}
+            <img src="/logo.png" alt={content.branding.name} />
           </div>
           <div className="admin-nav-text">
-            <h2>{content.branding.name}</h2>
-            <span>لوحة التحكم</span>
+            <h2>لوحة التحكم</h2>
           </div>
         </div>
         <div className="admin-nav-actions">
@@ -198,7 +195,7 @@ export default function Admin() {
             {saving ? "جاري الحفظ..." : "💾 حفظ"}
           </button>
         </div>
-      </header>
+      </nav>
 
       <main className="admin-main">
         {message && <div className="admin-message">{message}</div>}
@@ -217,7 +214,7 @@ export default function Admin() {
                 }}
               />
               <Field
-                label="رقم واتساب (اختياري)"
+                label="رقم واتساب"
                 value={content.contact.phones[1] || ""}
                 onChange={(v) => {
                   const next = [...content.contact.phones];
@@ -262,7 +259,7 @@ export default function Admin() {
           </div>
         </section>
 
-        <section>
+        {/* <section>
           <h2 className="admin-section-title">🖼️ صور أساسية</h2>
           <p>
             تتم إدارة الصور بشكلٍ ثابت عبر GitHub CMS. لتحديث أي صورة، قم بتحرير
@@ -300,7 +297,7 @@ export default function Admin() {
               )}
             </div>
           )}
-        </section>
+        </section> */}
 
         <section>
           <h2 className="admin-section-title">🔑 تغيير كلمة مرور المسؤول</h2>
