@@ -204,30 +204,61 @@ export default function Admin() {
           <div className="admin-card">
             <h2>📞 معلومات التواصل</h2>
             <div className="admin-fields">
+              <div className="flex gap-x-2">
+                <Field
+                  label="رقم الهاتف الرئيسي"
+                  value={content.contact.phones[0]}
+                  onChange={(v) => {
+                    const next = [...content.contact.phones];
+                    next[0] = v;
+                    updateField("contact.phones", next);
+                  }}
+                />
+                <Field
+                  label="رقم الهاتف الفرعي"
+                  value={content.contact.phones[1]}
+                  onChange={(v) => {
+                    const next = [...content.contact.phones];
+                    next[1] = v;
+                    updateField("contact.phones", next);
+                  }}
+                />
+              </div>
+              <div className="flex gap-x-2">
+                <Field
+                  label="رقم الواتساب الرئيسي"
+                  value={content.social.whatsapp[0]}
+                  onChange={(v) => {
+                    const next = [...content.social.whatsapp];
+                    next[0] = v;
+                    updateField("social.whatsapp", next);
+                  }}
+                />
+                <Field
+                  label="رقم الواتساب الفرعي"
+                  value={content.social.whatsapp[1]}
+                  onChange={(v) => {
+                    const next = [...content.social.whatsapp];
+                    next[1] = v;
+                    updateField("social.whatsapp", next);
+                  }}
+                />
+              </div>
+
               <Field
-                label="رقم الهاتف الرئيسي"
-                value={content.contact.phones[0]}
-                onChange={(v) => {
-                  const next = [...content.contact.phones];
-                  next[0] = v;
-                  updateField("contact.phones", next);
-                }}
+                label="فيسبوك"
+                value={content.contact.email}
+                onChange={(v) => updateField("contact.email", v)}
               />
               <Field
-                label="رقم واتساب"
-                value={content.contact.phones[1] || ""}
-                onChange={(v) => {
-                  const next = [...content.contact.phones];
-                  next[1] = v;
-                  updateField("contact.phones", next);
-                }}
+                label="انستاجرام"
+                value={content.contact.email}
+                onChange={(v) => updateField("contact.email", v)}
               />
               <Field
                 label="البريد الإلكتروني"
-                value={content.contact.emails[0]}
-                onChange={(v) =>
-                  updateField("contact.emails", [v, content.contact.emails[1]])
-                }
+                value={content.contact.email}
+                onChange={(v) => updateField("contact.email", v)}
               />
               <Field
                 label="المدينة / المنطقة"
@@ -250,6 +281,11 @@ export default function Admin() {
                 value={content.branding.emoji}
                 onChange={(v) => updateField("branding.emoji", v)}
               /> */}
+              <Field
+                label="وصف صغير"
+                value={content.branding.description}
+                onChange={(v) => updateField("branding.description", v)}
+              />
               <Field
                 label="الشعار النصي"
                 value={content.branding.slogan}
@@ -341,14 +377,14 @@ export default function Admin() {
 
 function Field({ label, value, onChange }) {
   return (
-    <label>
-      <div className="admin-field-label">{label}</div>
+    <div className="grow">
+      <label className="admin-field-label">{label}</label>
       <input
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
-        className="admin-input"
+        className="admin-input "
       />
-    </label>
+    </div>
   );
 }
 

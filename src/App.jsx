@@ -2,18 +2,14 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Home from "./Home";
 import Admin from "./Admin";
 
+import "./admin.css";
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
-        <Route
-          path="/admin"
-          element={<Admin />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin />} />
         <Route
           path="*"
           element={
@@ -37,4 +33,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-

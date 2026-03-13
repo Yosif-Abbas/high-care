@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageLoading from "./components/PageLoading";
+import { SocialIcon } from "react-social-icons";
 
 // use an explicit environment variable when the backend runs on a separate
 // port. When deployed on Vercel the API lives on the same origin, so the
@@ -13,19 +14,18 @@ export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
 
   // whenever the logo in content changes, update the favicon (cache-busting)
-  useEffect(() => {
-    if (content?.images?.logo) {
-      const link =
-        document.querySelector("link[rel~='icon']") ||
-        document.createElement("link");
-      link.rel = "icon";
-      link.href = `/favicon.ico?v=${Date.now()}`;
-      document.head.appendChild(link);
-    }
-  }, [content]);
+  // useEffect(() => {
+  //   if (content?.images?.logo) {
+  //     const link =
+  //       document.querySelector("link[rel~='icon']") ||
+  //       document.createElement("link");
+  //     link.rel = "icon";
+  //     link.href = `/favicon.ico?v=${Date.now()}`;
+  //     document.head.appendChild(link);
+  //   }
+  // }, [content]);
 
   useEffect(() => {
-    console.log(API_BASE);
     fetch(`${API_BASE}/api/content`)
       .then((res) => res.json())
       .then((data) => {
@@ -51,15 +51,15 @@ export default function Home() {
     );
   }
 
-  const waInternational =
-    content.social?.waButtonsInternational || "966501234567";
-  const waLink = `https://wa.me/${waInternational}`;
+  const whatsapp = content.social?.whatsapp?.primaryNumber || "";
+  const whatsappLink = `https://wa.me/${whatsapp}`;
 
-  const logoFile = content.images?.logo || "logo.png";
-  const logoUrl = `${API_BASE}/images/${logoFile}`;
-  const logoEmoji = content.branding?.emoji || "✨";
   const brandName = content.branding?.name || "هاي كير";
   const slogan = content.branding?.slogan || "الجودة والاحترافية في كل خدمة";
+
+  const description =
+    content.branding?.description ||
+    "نقدم خدمات متكاملة لنقل الأثاث وتنظيف الفلل وتأجير الألعاب للأطفال في المناسبات — بأيدٍ أمينة وخبرة موثوقة.";
 
   const svcImg = (slot, fallback) => {
     if (slot) return `${API_BASE}/images/${slot}`;
@@ -116,27 +116,30 @@ export default function Home() {
         </div>
 
         <div className="hero-content">
-          <div className="hero-badge">⭐ الجودة والاحترافية في كل خدمة</div>
+          <div className="hero-badge">⭐ {slogan}</div>
           <h1>
             نحن <span className="highlight">{brandName}</span>
             <br />
             خدمات تجعل حياتك أسهل
           </h1>
-          <p>
-            نقدم خدمات متكاملة لنقل الأثاث وتنظيف الفلل وتأجير الألعاب للأطفال
-            في المناسبات — بأيدٍ أمينة وخبرة موثوقة.
-          </p>
+          <p>{description}</p>
           <div className="hero-btns">
             <a href="#services" className="btn-main">
               🔍 استكشف خدماتنا
             </a>
+            {/* <a target="_blank" rel="noreferrer" className="btn-outline-white"> */}
+            {/* </a> */}
             <a
-              href={waLink}
+              href={whatsappLink}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="btn-outline-white"
             >
-              💬 تواصل واتساب
+              <SocialIcon
+                url={whatsappLink}
+                style={{ height: 40, width: 40 }}
+              />
+              تواصل واتساب
             </a>
           </div>
           <div className="hero-stats">
@@ -209,7 +212,7 @@ export default function Home() {
                 <li>أسعار تنافسية وشفافة</li>
               </ul>
               <a
-                href={waLink}
+                href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 className="svc-btn"
@@ -247,7 +250,7 @@ export default function Home() {
                 <li>فريق نسائي متخصص</li>
               </ul>
               <a
-                href={waLink}
+                href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 className="svc-btn"
@@ -285,7 +288,7 @@ export default function Home() {
                 <li>إشراف وضمان السلامة</li>
               </ul>
               <a
-                href={waLink}
+                href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 className="svc-btn"
@@ -463,7 +466,7 @@ export default function Home() {
 
         <div className="social-contact-grid">
           <a
-            href={waLink}
+            href={whatsappLink}
             target="_blank"
             rel="noreferrer"
             className="social-btn btn-whatsapp"
@@ -519,7 +522,7 @@ export default function Home() {
           <div>
             <div className="logo-wrap" style={{ marginBottom: "0.5rem" }}>
               <div className="logo-icon" style={{ width: 38, height: 38 }}>
-                {logoUrl ? <img src={logoUrl} alt={brandName} /> : logoEmoji}
+                <img src="/logo.png" alt={brandName} />
               </div>
               <span className="logo-text">{brandName}</span>
             </div>
@@ -529,7 +532,7 @@ export default function Home() {
             </p>
             <div className="footer-social">
               <a
-                href={waLink}
+                href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 className="f-social-icon"
@@ -601,7 +604,7 @@ export default function Home() {
             <h4>تواصل معنا</h4>
             <ul>
               <li>
-                <a href={waLink} target="_blank" rel="noreferrer">
+                <a href={whatsappLink} target="_blank" rel="noreferrer">
                   💬 واتساب
                 </a>
               </li>
