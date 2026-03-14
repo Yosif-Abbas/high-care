@@ -60,7 +60,6 @@ export default function Services({ whatsappLink }) {
               <li>تلميع الأرضيات والنوافذ</li>
               <li>تعقيم الحمامات والمطابخ</li>
               <li>إزالة البقع والأتربة العميقة</li>
-              <li>فريق نسائي متخصص</li>
             </ul>
             <a
               href={whatsappLink}
@@ -92,7 +91,6 @@ export default function Services({ whatsappLink }) {
               <li>ألعاب آمنة ومعتمدة</li>
               <li>توصيل وتركيب وإزالة</li>
               <li>مناسب لجميع المناسبات</li>
-              <li>إشراف وضمان السلامة</li>
             </ul>
             <a
               href={whatsappLink}
