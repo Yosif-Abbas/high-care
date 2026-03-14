@@ -1,13 +1,19 @@
 {
   "contact": {
-    "phones": ["70661510", "70661510"],
+    "phones": [
+      "+97470661510",
+      "+97470130230"
+    ],
     "email": "info@hicare.sa",
     "city": "الدوحةةةةةةة",
     "workDays": "السبت – الخميس",
     "workHours": "8 صباحًا – 10 مساءً"
   },
   "social": {
-    "whatsapp": ["70661510", "70661510"],
+    "whatsapp": [
+      "+97470661510",
+      "+97470130230"
+    ],
     "instagram": "https://www.instagram.com/highcareqatar/",
     "facebook": "https://www.facebook.com/profile.php?id=61584652604365"
   },
@@ -17,6 +23,6 @@
     "slogan": "الجودة والاحترافية في كل خدمة"
   },
   "admin": {
-    "passwordHash": "65c7ee020a1db6dd64b5efc031a681b4fc1d3b48b583fdbbfe1cadc85f74de53"
+    "passwordHash": "e3de61a17c629ab836b5946d45c8f6e44286d6ea9ab5e7c40aecf5fecfdf5bb8"
   }
 }

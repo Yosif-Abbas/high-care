@@ -253,23 +253,24 @@ export default function Admin() {
 
               <Field
                 label="فيسبوك"
-                value={content.contact.instagram}
-                onChange={(v) => updateField("contact.instagram", v)}
+                value={content.social.instagram}
+                onChange={(v) => updateField("social.instagram", v)}
               />
               <Field
                 label="انستاجرام"
-                value={content.contact.facebook}
-                onChange={(v) => updateField("contact.facebook", v)}
+                value={content.social.facebook}
+                onChange={(v) => updateField("social.facebook", v)}
               />
-              <Field
+              {/* <Field
                 label="البريد الإلكتروني"
                 value={content.contact.email}
                 onChange={(v) => updateField("contact.email", v)}
-              />
+              /> */}
               <Field
                 label="المدينة / المنطقة"
                 value={content.contact.city}
                 onChange={(v) => updateField("contact.city", v)}
+                dir="rtl"
               />
             </div>
           </div>
@@ -281,21 +282,24 @@ export default function Admin() {
                 label="اسم الشركة"
                 value={content.branding.name}
                 onChange={(v) => updateField("branding.name", v)}
+                dir="rtl"
               />
               {/* <Field
                 label="الإيموجي"
                 value={content.branding.emoji}
                 onChange={(v) => updateField("branding.emoji", v)}
               /> */}
-              <Field
+              <TextAreaField
                 label="وصف صغير"
                 value={content.branding.description}
                 onChange={(v) => updateField("branding.description", v)}
+                dir="rtl"
               />
               <Field
                 label="الشعار النصي"
                 value={content.branding.slogan}
                 onChange={(v) => updateField("branding.slogan", v)}
+                dir="rtl"
               />
             </div>
           </div>
@@ -381,14 +385,29 @@ export default function Admin() {
   );
 }
 
-function Field({ label, value, onChange }) {
+function Field({ label, value, onChange, dir = "ltr" }) {
   return (
     <div className="grow">
       <label className="admin-field-label">{label}</label>
       <input
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
-        className="admin-input "
+        className="admin-input"
+        dir={dir}
+      />
+    </div>
+  );
+}
+
+function TextAreaField({ label, value, onChange, dir = "ltr" }) {
+  return (
+    <div className="grow">
+      <label className="admin-field-label">{label}</label>
+      <textarea
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="admin-input"
+        dir={dir}
       />
     </div>
   );
@@ -410,5 +429,3 @@ function PhoneField({ label, value, onChange }) {
     </div>
   );
 }
-
-// ImageSlot component removed; previews inline in the image section
