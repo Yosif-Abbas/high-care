@@ -63,19 +63,52 @@ app.get("/favicon.ico", (req, res) => {
 // image upload handling removed; static images only
 
 // fetch content.json either locally (dev) or from GitHub (prod)
+// async function readContent() {
+//   if (!process.env.GITHUB_TOKEN) {
+//     throw new Error("GITHUB_TOKEN required to read content.json");
+//   }
+//   const repo = process.env.GITHUB_REPOSITORY;
+//   const branch = process.env.GITHUB_BRANCH || "main";
+//   const url = `https://raw.githubusercontent.com/${repo}/${branch}/content/content.json?t=${Date.now()}`;
+//   const resp = await fetch(url, { cache: "no-store" });
+//   if (!resp.ok) {
+//     throw new Error(`failed to fetch content from GitHub: ${resp.status}`);
+//   }
+//   const text = await resp.text();
+//   return JSON.parse(text || "{}");
+// }
+
 async function readContent() {
   if (!process.env.GITHUB_TOKEN) {
     throw new Error("GITHUB_TOKEN required to read content.json");
   }
-  const repo = process.env.GITHUB_REPOSITORY;
+
+  const repo = process.env.GITHUB_REPOSITORY; // e.g. "Yosif-Abbas/high-care"
   const branch = process.env.GITHUB_BRANCH || "main";
-  const url = `https://raw.githubusercontent.com/${repo}/${branch}/content/content.json`;
-  const resp = await fetch(url);
+
+  const url =
+    `https://api.github.com/repos/${repo}/contents/content/content.json` +
+    `?ref=${branch}&t=${Date.now()}`;
+
+  // https://api.github.com/repos/Yosif-Abbas/high-care/contents/content/content.json?ref=main&t=15616513215
+
+  const resp = await fetch(url, {
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      Accept: "application/vnd.github+json",
+    },
+  });
+
   if (!resp.ok) {
     throw new Error(`failed to fetch content from GitHub: ${resp.status}`);
   }
-  const text = await resp.text();
-  return JSON.parse(text || "{}");
+
+  const data = await resp.json();
+
+  const decoded = Buffer.from(data.content, "base64").toString("utf8");
+
+  return JSON.parse(decoded || "{}");
 }
 
 // write using GitHub API when possible, otherwise fall back to filesystem
@@ -147,6 +180,10 @@ async function commitContent(data) {
 // get public content
 app.get("/api/content", async (req, res) => {
   try {
+    res.setHeader("cache", "no-store");
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.removeHeader("ETag");
+
     const data = await readContent();
     // strip admin before sending the response
     const { admin: _admin, ...publicData } = data;

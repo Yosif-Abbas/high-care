@@ -247,7 +247,7 @@ nav {
   margin-bottom: 1.5rem;
 }
 
-.hero h1 .highlight {
+.highlight {
   background: linear-gradient(135deg, #38bdf8, #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -559,7 +559,7 @@ section {
 .steps-wrap::before {
   content: "";
   position: absolute;
-  top: 50px;
+  top: 66px;
   right: 12%;
   width: 76%;
   height: 2px;
@@ -777,7 +777,7 @@ section {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.9rem 2rem;
+  padding: 0.4rem 2rem;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 700;
@@ -946,8 +946,15 @@ footer {
   .hero-cards {
     display: none;
   }
+
   .footer-top {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .steps-wrap::before {
+    display: none;
   }
 }
 

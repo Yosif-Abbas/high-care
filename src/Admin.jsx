@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import "./admin.css";
 import PageLoading from "./components/PageLoading";
 
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+
 // use an explicit environment variable when the backend runs on a separate
 // port. When deployed on Vercel the API lives on the same origin, so the
 // default value is an empty string and requests are made relative to `/`.
@@ -207,7 +210,7 @@ export default function Admin() {
             <h2>📞 معلومات التواصل</h2>
             <div className="admin-fields">
               <div className="flex gap-x-2">
-                <Field
+                <PhoneField
                   label="رقم الهاتف الرئيسي"
                   value={content.contact.phones[0]}
                   onChange={(v) => {
@@ -216,7 +219,8 @@ export default function Admin() {
                     updateField("contact.phones", next);
                   }}
                 />
-                <Field
+
+                <PhoneField
                   label="رقم الهاتف الفرعي"
                   value={content.contact.phones[1]}
                   onChange={(v) => {
@@ -227,7 +231,7 @@ export default function Admin() {
                 />
               </div>
               <div className="flex gap-x-2">
-                <Field
+                <PhoneField
                   label="رقم الواتساب الرئيسي"
                   value={content.social.whatsapp[0]}
                   onChange={(v) => {
@@ -236,7 +240,7 @@ export default function Admin() {
                     updateField("social.whatsapp", next);
                   }}
                 />
-                <Field
+                <PhoneField
                   label="رقم الواتساب الفرعي"
                   value={content.social.whatsapp[1]}
                   onChange={(v) => {
@@ -249,13 +253,13 @@ export default function Admin() {
 
               <Field
                 label="فيسبوك"
-                value={content.contact.email}
-                onChange={(v) => updateField("contact.email", v)}
+                value={content.contact.instagram}
+                onChange={(v) => updateField("contact.instagram", v)}
               />
               <Field
                 label="انستاجرام"
-                value={content.contact.email}
-                onChange={(v) => updateField("contact.email", v)}
+                value={content.contact.facebook}
+                onChange={(v) => updateField("contact.facebook", v)}
               />
               <Field
                 label="البريد الإلكتروني"
@@ -385,6 +389,23 @@ function Field({ label, value, onChange }) {
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         className="admin-input "
+      />
+    </div>
+  );
+}
+
+function PhoneField({ label, value, onChange }) {
+  return (
+    <div className="grow" dir="rtl">
+      <label className="admin-field-label">{label}</label>
+
+      <PhoneInput
+        international
+        defaultCountry="QA"
+        countryCallingCodeEditable={false}
+        value={value}
+        onChange={onChange}
+        className="admin-input"
       />
     </div>
   );
