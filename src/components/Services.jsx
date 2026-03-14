@@ -1,3 +1,5 @@
+import { FaWhatsapp } from "react-icons/fa";
+
 export default function Services({ whatsappLink }) {
   return (
     <section className="services" id="services">
@@ -18,7 +20,7 @@ export default function Services({ whatsappLink }) {
             <div className="svc-img-icon">🚛</div>
           </div>
           <div className="svc-body">
-            <h3>نقل الأثاث</h3>
+            <h2>نقل الأثاث</h2>
             <p>
               نوفر خدمة نقل أثاث احترافية وآمنة داخل المدينة وخارجها، مع فريق
               متخصص وسيارات مجهزة لضمان سلامة كل قطعة.
@@ -36,7 +38,8 @@ export default function Services({ whatsappLink }) {
               rel="noreferrer"
               className="svc-btn"
             >
-              💬 احجز الآن ←
+              <FaWhatsapp color="#25D366" size={20} />
+              احجز الآن ←
             </a>
           </div>
         </div>
@@ -50,7 +53,7 @@ export default function Services({ whatsappLink }) {
             <div className="svc-img-icon">🏡</div>
           </div>
           <div className="svc-body">
-            <h3>تنظيف الفلل</h3>
+            <h2>تنظيف الفلل</h2>
             <p>
               خدمة تنظيف شاملة وعميقة للفلل والمنازل باستخدام أحدث المعدات ومواد
               التنظيف الصديقة للبيئة لنتيجة مبهرة.
@@ -67,7 +70,8 @@ export default function Services({ whatsappLink }) {
               rel="noreferrer"
               className="svc-btn"
             >
-              💬 احجزي الآن ←
+              <FaWhatsapp color="#25D366" size={20} />
+              احجز الآن ←
             </a>
           </div>
         </div>
@@ -81,7 +85,7 @@ export default function Services({ whatsappLink }) {
             <div className="svc-img-icon">🎪</div>
           </div>
           <div className="svc-body">
-            <h3>تأجير ألعاب الأطفال للمناسبات</h3>
+            <h2>تأجير ألعاب الأطفال للمناسبات</h2>
             <p>
               اجعل حفلات أطفالك لا تُنسى! نوفر أجمل الألعاب النفخية والترفيهية
               للأعياد والمناسبات مع التركيب والإزالة.
@@ -98,7 +102,8 @@ export default function Services({ whatsappLink }) {
               rel="noreferrer"
               className="svc-btn"
             >
-              💬 احجز المناسبة ←
+              <FaWhatsapp color="#25D366" size={20} />
+              احجز الآن ←
             </a>
           </div>
         </div>
