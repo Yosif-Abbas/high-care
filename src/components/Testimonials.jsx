@@ -1,4 +1,4 @@
-export default function Testimonials() {
+export default function Testimonials({ city }) {
   return (
     <section className="testimonials" id="testimonials">
       <p className="sec-tag">آراء العملاء</p>
@@ -16,7 +16,7 @@ export default function Testimonials() {
             <div className="rev-avatar">أ</div>
             <div className="rev-info">
               <h4>أبو محمد العتيبي</h4>
-              <span>الرياض — نقل أثاث</span>
+              <span>{city} — نقل أثاث</span>
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function Testimonials() {
             <div className="rev-avatar">ن</div>
             <div className="rev-info">
               <h4>نورة السالم</h4>
-              <span>جدة — تنظيف فلل</span>
+              <span>{city} — تنظيف فلل</span>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function Testimonials() {
             <div className="rev-avatar">م</div>
             <div className="rev-info">
               <h4>مها الزهراني</h4>
-              <span>الدمام — تأجير ألعاب</span>
+              <span>{city} — تأجير ألعاب</span>
             </div>
           </div>
         </div>

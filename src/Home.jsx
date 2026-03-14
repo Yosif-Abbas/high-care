@@ -93,7 +93,7 @@ export default function Home() {
       <Whyus />
 
       {/* TESTIMONIALS */}
-      <Testimonials />
+      <Testimonials city={content.contact.city} />
 
       {/* CONTACT */}
       <Contact content={content} whatsappLink={whatsappLink} />

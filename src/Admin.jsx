@@ -209,7 +209,7 @@ export default function Admin() {
           <div className="admin-card">
             <h2>📞 معلومات التواصل</h2>
             <div className="admin-fields">
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2 flex-col xl:flex-row">
                 <PhoneField
                   label="رقم الهاتف الرئيسي"
                   value={content.contact.phones[0]}
@@ -230,7 +230,7 @@ export default function Admin() {
                   }}
                 />
               </div>
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2 flex-col xl:flex-row">
                 <PhoneField
                   label="رقم الواتساب الرئيسي"
                   value={content.social.whatsapp[0]}
@@ -424,7 +424,7 @@ function PhoneField({ label, value, onChange }) {
         countryCallingCodeEditable={false}
         value={value}
         onChange={onChange}
-        className="admin-input"
+        className="admin-input "
       />
     </div>
   );

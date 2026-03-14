@@ -1,7 +1,21 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { RxHamburgerMenu } from "react-icons/rx";
+import Hamburger from "./Hamburger";
+import { GiHamburgerMenu } from "react-icons/gi";
+import NavLinks from "./NavLinks";
 export default function Navbar({ brandName }) {
-  const [navOpen, setNavOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    () => setIsMenuOpen(false);
+  }, []);
 
   return (
     <nav id="navbar">
@@ -12,34 +26,18 @@ export default function Navbar({ brandName }) {
         </div>
         {/* <span className="logo-text">{brandName}</span> */}
       </div>
-      <ul className={`nav-links ${navOpen ? "open" : ""}`} id="navLinks">
-        <li>
-          <a href="#services">خدماتنا</a>
-        </li>
-        <li>
-          <a href="#process">كيف نعمل</a>
-        </li>
-        <li>
-          <a href="#whyus">لماذا نحن</a>
-        </li>
-        <li>
-          <a href="#testimonials">آراء العملاء</a>
-        </li>
-        <li>
-          <a href="#contact" className="nav-cta">
-            تواصل معنا
-          </a>
-        </li>
-      </ul>
-      <div
-        className="hamburger"
-        id="hamburger"
-        onClick={() => setNavOpen((v) => !v)}
+
+      <button
+        className="cursor-pointer text-3xl md:hidden"
+        onClick={() => setIsMenuOpen((prev) => !prev)}
       >
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+        <GiHamburgerMenu />
+      </button>
+      <NavLinks
+        isMobile={isMobile}
+        isMenuOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+      />
     </nav>
   );
 }
