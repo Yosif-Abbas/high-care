@@ -90,7 +90,7 @@ export default function Home() {
       <Work />
 
       {/* WHY US */}
-      <Whyus />
+      <Whyus brandName={brandName} />
 
       {/* TESTIMONIALS */}
       <Testimonials city={content.contact.city} />
