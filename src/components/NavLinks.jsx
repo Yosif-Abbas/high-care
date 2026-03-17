@@ -26,11 +26,11 @@ export default function NavLinks({ isMobile, isMenuOpen, onClose }) {
             لماذا نحن
           </a>
         </li>
-        <li>
+        {/* <li>
           <a href="#testimonials" onClick={onClose}>
             آراء العملاء
           </a>
-        </li>
+        </li> */}
         <li>
           <a
             href="#contact"
